@@ -1336,3 +1336,9 @@ iex(55)> 5 |> number_to_lambda.() |> fact.() |> lambda_to_number.()
 ---
 
 # Thanks Folks!
+
+---
+
+![inline](qrcode.svg)
+
+# [fit] [github.com/bamorim/elixir-nyc-meetup-feb-2020](https://github.com/bamorim/elixir-nyc-meetup-feb-2020)
