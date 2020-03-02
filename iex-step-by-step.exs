@@ -10,7 +10,7 @@ lambda_to_bool.(false!)
 not! = fn b -> b.(false!).(true!) end
 true! |> not!.() |> lambda_to_bool.()
 false! |> not!.() |> lambda_to_bool.()
-and! = fn a -> fn b -> a.(b).(a) end end
+and! = fn a -> fn b -> a.(b).(false!) end end
 and!.(true!).(true!) |> lambda_to_bool.()
 and!.(true!).(false!) |> lambda_to_bool.()
 and!.(false!).(true!) |> lambda_to_bool.()

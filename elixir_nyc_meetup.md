@@ -614,7 +614,7 @@ end end
 # And Function
 
 ```elixir
-iex(13)> and! = fn a -> fn b -> a.(b).(a) end end
+iex(13)> and! = fn a -> fn b -> a.(b).(false!) end end
 #Function<7.91303403/1 in :erl_eval.expr/5>
 iex(14)> and!.(true!).(true!) |> lambda_to_bool.()
 true
