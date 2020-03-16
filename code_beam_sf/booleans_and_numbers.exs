@@ -20,9 +20,8 @@ succ = fn n -> fn f -> fn x -> f.(n.(f).(x)) end end end
 one = succ.(zero)
 two = succ.(succ.(zero))
 lambda_to_number = fn n -> n.(&(&1 + 1)).(0) end
-number_to_lambda = fn
-  0 -> zero
-  n -> Enum.reduce(1..n, zero, fn _, x -> succ.(x) end)
+number_to_lambda = fn n ->
+  0..n |> Enum.drop(1) |> Enum.reduce(zero, fn _, x -> succ.(x) end)
 end
 lambda_to_number.(zero)
 lambda_to_number.(one)

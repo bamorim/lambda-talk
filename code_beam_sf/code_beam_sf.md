@@ -295,13 +295,20 @@ iex(6)> false!.("This if true").("This if false")
 
 ---
 
-# The output on iex is not helpful
-```elixir
+[.code-highlight: 2,4]
+
+```
 iex(3)> true! = fn t -> fn _ -> t end end
 #Function<7.91303403/1 in :erl_eval.expr/5>
 iex(4)> false! = fn _ -> fn f -> f end end
 #Function<7.91303403/1 in :erl_eval.expr/5>
+iex(5)> true!.("This if true").("This if false")
+"This if true"
+iex(6)> false!.("This if true").("This if false")
+"This if false"
 ```
+
+^ Not helpful representation
 
 ---
 
@@ -322,6 +329,13 @@ We can apply non-lambda terms to our lambda term
 # Let's cheat
 
 We can apply non-lambda terms to our lambda term
+
+```elixir
+encoded_boolean.(true).(false)
+
+```
+
+---
 
 ```elixir
   iex(7)> lambda_to_bool = fn b -> b.(true).(false) end
@@ -502,7 +516,8 @@ false
 
 ---
 
-# [fit] `N => λf. λx. F_APPLIED_TO_X_N_TIMES`
+# N
+# [fit] `λf. λx. F_APPLIED_TO_X_N_TIMES`
 
 ---
 
@@ -551,18 +566,16 @@ But we know the "form" of a function
 
 ## `λn. (λf. λx. ???)`
 
+### Apply `f` to `x` N+1 times
+
 ^
 Now what the internal function should return is, if `n` receives a function and an input and applies the function to the input *N* times,
 then we need to apply `f` *N+1* times to `x`.
 
 ---
 
-# if `n` encodes natural number `N` then
-
----
-
-# [fit] `n f x`
-# Applies `f` to `x` `N` times
+# Applying N times
+## `n f x`
 
 ---
 
@@ -600,8 +613,6 @@ end end end
 
 ---
 
-# Constructing Church Numerals
-
 ```elixir
 ex(18)> zero = fn _f -> fn x -> x end end
 #Function<7.91303403/1 in :erl_eval.expr/5>
@@ -614,24 +625,46 @@ iex(21)> two = succ.(succ.(zero))
 ```
 
 ---
+[.code-highlight:2,6,8]
 
-# The output on iex is not helpful (again)
-```elixir
+```
+iex(18)> zero = fn _f -> fn x -> x end end
+#Function<7.91303403/1 in :erl_eval.expr/5>
+iex(19)> succ = fn n -> fn f -> fn x -> f.(n.(f).(x)) end end end
+#Function<7.91303403/1 in :erl_eval.expr/5>
+iex(20)> one = succ.(zero)
+#Function<7.91303403/1 in :erl_eval.expr/5>
+iex(21)> two = succ.(succ.(zero))
 #Function<7.91303403/1 in :erl_eval.expr/5>
 ```
 
 ---
 
-# Encoding and Decoding Church Numerals
+# Elixir Numbers ↔ Church Numerals
+
+---
+
+# Elixir Numbers ↔ Church Numerals
+
+```elixir
+lambda_to_number = fn n ->
+  n. # Do N times
+    (&(&1 + 1)). # Adds 1
+    (0) # Start with 0
+end
+
+number_to_lambda = fn n ->
+  0..n |> Enum.drop(1) |> Enum.reduce(zero, fn _, x -> succ.(x) end)
+end
+```
 
 ---
 
 ```elixir
 iex(22)> lambda_to_number = fn n -> n.(&(&1 + 1)).(0) end
 #Function<7.91303403/1 in :erl_eval.expr/5>
-iex(23)> number_to_lambda = fn
-...(23)>   0 -> zero
-...(23)>   n -> Enum.reduce(1..n, zero, fn _, x -> succ.(x) end)
+iex(23)> number_to_lambda = fn n ->
+...(23)>   0..n |> Enum.drop(1) |> Enum.reduce(zero, fn _, x -> succ.(x) end)
 ...(23)> end
 #Function<7.91303403/1 in :erl_eval.expr/5>
 ```
@@ -773,6 +806,22 @@ iex(34)> mul.
 ---
 
 # What's next?
+
+---
+
+# Predecessor Function
+
+---
+
+# Predecessor Function
+
+## [fit] `λn. λf. λx. n (λg. λh. h (g f)) (λu. x) (λu. u)`
+
+---
+
+# Recursion
+
+## Fixed Point Combinators
 
 ---
 
